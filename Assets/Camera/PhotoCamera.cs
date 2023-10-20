@@ -16,7 +16,7 @@ namespace Camera
         public static float timeToShowLastImage { get; } = 2f;
         private int _picturesTakenNb;
 
-        public List<Texture2D> _shotsTaken = new();
+        public List<Texture2D> _picturesTaken = new();
 
         private void Start()
         {
@@ -41,7 +41,7 @@ namespace Camera
 
         public void TakePicture()
         {
-            //Graphics.CopyTexture(_cameraRT, _lastImage);
+            
             if (_showLastImageTimeRemaining > 0)
             {
                 return;
@@ -53,19 +53,24 @@ namespace Camera
                 _lastImage.Apply();
                 _lastTakenImage.texture = _lastImage;
                 
-                _shotsTaken.Add(_lastImage);
+                _picturesTaken.Add(_lastImage);
             
                 //Save the image to file
-                var currentTime = DateTime.Now;
-                string fileName = $"Picture_{currentTime:d}_{_picturesTakenNb+1}.jpeg";
-                fileName = System.IO.Path.Combine(Application.persistentDataPath, fileName);
-                System.IO.File.WriteAllBytes(fileName, _lastImage.EncodeToJPG());
-                Debug.Log("Filename: "+ fileName);
+                SaveTextureToJpeg();
                 _picturesTakenNb++;
             });
             _showLastImageTimeRemaining = timeToShowLastImage;
             _liveDisplayImage.gameObject.SetActive(false);
             _lastTakenImage.gameObject.SetActive(true);
+        }
+
+        private void SaveTextureToJpeg()
+        {
+            var currentTime = DateTime.Now;
+            string fileName = $"Picture_{currentTime:d}_{_picturesTakenNb + 1}.jpeg";
+            fileName = System.IO.Path.Combine(Application.persistentDataPath, fileName);
+            System.IO.File.WriteAllBytes(fileName, _lastImage.EncodeToJPG());
+            Debug.Log("Picture saved at : " + fileName);
         }
     }
 }
