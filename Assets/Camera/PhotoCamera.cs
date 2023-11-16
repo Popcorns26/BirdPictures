@@ -11,6 +11,8 @@ namespace Camera
         [SerializeField] private RawImage _liveDisplayImage;
         [SerializeField] private RawImage _lastTakenImage;
         [SerializeField] private RenderTexture _cameraRT;
+        [SerializeField] private CheckIfVisible[] _birds;
+        [SerializeField] private UnityEngine.Camera _camera;
         private Texture2D _lastImage;
         private float _showLastImageTimeRemaining;
         public static float timeToShowLastImage { get; } = 2f;
@@ -41,11 +43,17 @@ namespace Camera
 
         public void TakePicture()
         {
-            
             if (_showLastImageTimeRemaining > 0)
             {
                 return;
             }
+
+            foreach (CheckIfVisible bird in _birds)
+            {
+                string answer = bird.CheckIsVisible(_camera.transform.position) ? "Yes" : "No";
+                Debug.Log($"This bird is visible? {answer}");
+            }
+            
             AsyncGPUReadback.Request(_cameraRT, 0, request =>
             {
                 
