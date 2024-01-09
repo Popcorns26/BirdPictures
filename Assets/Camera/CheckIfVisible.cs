@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class CheckIfVisible : MonoBehaviour
@@ -33,7 +31,13 @@ public class CheckIfVisible : MonoBehaviour
             return false;
         }
         Vector3 direction = transform.position - cameraPosition;
-        Physics.Raycast(cameraPosition, direction, out RaycastHit hit,15);
+        const int maxDistance = 150;
+        Physics.Raycast(cameraPosition, direction, out RaycastHit hit, maxDistance);
+        if (hit.collider == null)
+        {
+            Debug.Log($"Hit object withouth collider at distance: {hit.distance}. {hit.transform}");
+            return false;
+        }
         if (hit.collider.gameObject == gameObject)
         {
             Debug.Log("This bird was raycast hit: " + gameObject.name);
