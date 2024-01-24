@@ -13,13 +13,14 @@ public class PlayerController : MonoBehaviour, PlayerControls.IPlayerActions
     private Vector3 _direction;
     private Quaternion _rotation;
 
-        public void OnEnable()
+    public void OnEnable()
     {
         if (_playerControls == null)
         {
             _playerControls = new PlayerControls();
             _playerControls.Player.SetCallbacks(this);
         }
+
         _playerControls.Player.Enable();
     }
 
@@ -59,20 +60,20 @@ public class PlayerController : MonoBehaviour, PlayerControls.IPlayerActions
         //Debug.Log($"Value: {rotationValueRead}");
 
         //rotationValueRead.Normalize();
-        rotationValueRead*= _rotationFactorPerFrame;
+        rotationValueRead *= _rotationFactorPerFrame;
         //Temporarily removed z rotation because it has a funny result
         _rotation = Quaternion.Euler(0, rotationValueRead.x, 0);
     }
 
     public void OnTakePicture(InputAction.CallbackContext context)
     {
-        if(context.started)
+        if (context.started)
             _camera.TakePicture();
     }
 
     public void OnBirdFly(InputAction.CallbackContext context)
     {
-        if(context.started)
+        if (context.started)
             Debug.Log("Fly");
     }
 }
